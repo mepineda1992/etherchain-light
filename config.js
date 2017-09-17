@@ -4,7 +4,7 @@ var net = require('net');
 var config = function () {
   
   this.logFormat = "combined";
-  this.gethPath = "http://localhost:8545";
+  this.gethPath = process.env.blockchain_address || "http://localhost:8545";
   this.provider = new web3.providers.HttpProvider(this.gethPath);
   
   this.bootstrapUrl = "https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css";
