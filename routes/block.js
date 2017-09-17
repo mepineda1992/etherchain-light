@@ -9,7 +9,18 @@ router.get('/:block', function(req, res, next) {
   var config = req.app.get('config');  
   var web3 = new Web3();
   web3.setProvider(config.provider);
-  
+ 
+  web3._extend({
+    property: 'debug',
+    methods: [
+      new web3._extend.Method({
+         name: 'traceBlockByNumber',
+         call: 'debug_traceBlockByNumber',
+         params: 1,
+      })
+    ]
+  });
+
   async.waterfall([
     function(callback) {
       web3.eth.getBlock(req.params.block, true, function(err, result) {
@@ -19,7 +30,7 @@ router.get('/:block', function(req, res, next) {
       if (!result) {
         return next({name : "BlockNotFoundError", message : "Block not found!"});
       }
-      web3.trace.block(result.number, function(err, traces) {
+      web3.debug.traceBlockByNumber(result.number, function(err, traces) {
         callback(err, result, traces);
       });
     }
