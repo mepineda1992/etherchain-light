@@ -30,25 +30,10 @@ html(lang="en")
           ul.nav.navbar-nav
             li
               a(href='/') Home
-            li
-              a(href='/accounts') Accounts
-            li
-              a(href='/tx/pending') Pending Tx
-            li.dropdown
-              a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-                | Tools
-                span.caret
-              ul.dropdown-menu
-                li
-                  a(href='/tx/submit') Submit Tx
-                li
-                  a(href='/contract/verify') Verify Contract 
-                li
-                  a(href='/signature/verify') Verify Signature                
               
           form.navbar-form.navbar-right(action="/search", method="POST")
             .form-group
-              input.form-control#search(type='text', placeholder='Block / Tx / Account', name='search')
+              input.form-control#search(type='text', placeholder='Block / Tx', name='search')
             |  
             button.btn.btn-default(type='submit') Submit
     .container      

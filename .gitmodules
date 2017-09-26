@@ -1,3 +1,0 @@
-[submodule "utils/solc-bin"]
-	path = utils/solc-bin
-	url = https://github.com/ethereum/solc-bin.git

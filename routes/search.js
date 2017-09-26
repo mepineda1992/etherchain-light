@@ -14,8 +14,8 @@ router.post('/', function(req, res, next) {
 		res.redirect('/block/' + searchString);
 	} else if (searchString.length == 66) {
 		res.redirect('/tx/' + searchString);
-	} else if (searchString.length == 42) {
-		res.redirect('/account/' + searchString);
+	//} else if (searchString.length == 42) {
+	//	res.redirect('/account/' + searchString);
 	} else {
     return next({ message: "Error: Invalid search string!" });
   }
