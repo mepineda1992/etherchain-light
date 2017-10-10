@@ -41,7 +41,7 @@ router.get('/', function(req, res, next) {
     var txs = [];
     blocks.forEach(function(block) {
       block.transactions.forEach(function(tx) {
-        if (txs.length === 10) {
+        if (txs.length === 25) {
           return;
         }
         txs.push(tx);
