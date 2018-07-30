@@ -1,3 +1,11 @@
 FROM node:8.7.0-onbuild
+WORKDIR /usr/src/app
 
-EXPOSE 3000
+COPY package.json ./
+
+RUN npm install
+COPY . .
+
+EXPOSE 3002
+
+CMD [ "npm", "start" ]
