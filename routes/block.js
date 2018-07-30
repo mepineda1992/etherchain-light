@@ -9,7 +9,7 @@ router.get('/:block', function(req, res, next) {
   var config = req.app.get('config');  
   var web3 = new Web3();
   web3.setProvider(config.provider);
- 
+  
   web3._extend({
     property: 'debug',
     methods: [
@@ -30,8 +30,10 @@ router.get('/:block', function(req, res, next) {
       if (!result) {
         return next({name : "BlockNotFoundError", message : "Block not found!"});
       }
+      console.log('block',result);
       web3.debug.traceBlockByNumber(result.number, function(err, traces) {
         callback(err, result, traces);
+	if(err){console.log('DEBUG', err);}
       });
     }
   ], function(err, block, traces) {
