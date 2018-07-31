@@ -99,19 +99,18 @@ router.get('/:tx', function(req, res, next) {
 
     // Try to match the tx to a solidity function call if the contract source is available
     if (receipt.logs) {
-      //tx.source = JSON.parse(receipt.logs);
-      //console.log('tx.source', tx.source);
       try {
-        //var jsonAbi = JSON.parse(tx.source.abi);
-        //abiDecoder.addABI(jsonAbi);
-        //console.log('madia', receipt.logs, tx.input);
+        console.log('logs - MARIA ENID', tx, receipt);
+        console.log(web3.utils.hexToBytes(receipt.logs[0].topics[0]));
+
         const logs = receipt.logs.map(log => {
-          console.log('que raro', web3.sha3(log.data, {encoding: 'hex'}));
-          return { topics: log.topics, data: log.data };
+          console.log('datoss', log.topics.length, log.topics);
+
+          const topic = log.topics.length > 1 ? log.topics[3] : log.topics[0];
+          const decode = web3.eth.abi.decodeLog(['uint', 'uint', 'uint', 'uint', 'uint', 'uint'], log.data, topic);
+          return { decode };
         });
-        console.log('datos', logs);
-        //tx.logs = receipt.logs;
-        //tx.callInfo = tx.input;
+        console.log('logs', logs);
       } catch (e) {
         console.log("Error parsing ABI:", e);
       }
