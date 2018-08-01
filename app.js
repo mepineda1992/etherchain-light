@@ -45,14 +45,14 @@ app.locals.nameformatter = new(require('./utils/nameformatter.js'))(config);
 app.locals.nodeStatus = new(require('./utils/nodeStatus.js'))(config);
 app.locals.config = config;
 
-app.use('/', index);
-app.use('/block', block);
-app.use('/tx', tx);
-app.use('/account', account);
-app.use('/accounts', accounts);
-app.use('/contract', contract);
-app.use('/signature', signature);
-app.use('/search', search);
+app.use('/explorer/', index);
+app.use('/explorer/block', block);
+app.use('/explorer/tx', tx);
+app.use('/explorer/account', account);
+app.use('/explorer/accounts', accounts);
+app.use('/explorer/contract', contract);
+app.use('/explorer/signature', signature);
+app.use('/explorer/search', search);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
