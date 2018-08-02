@@ -106,37 +106,49 @@ router.get('/:tx', function(req, res, next) {
 
     // Try to match the tx to a solidity function call if the contract source is available
     if (receipt.logs) {
-      try {
-        tx.logs = []
-        tx.logs = receipt.logs.map(log => {
-          const str = web3.utils.toHex(log.topics[0]);
-          topic = log.topics.length > 1 ? log.topics[3] : log.topics[0];
+        tx.logs = receipt.logs.map(event => {
+          if (event.topics.length > 0) {
+            topic = event.topics[0];
+
+          } else {
+            topic = 'no topic'
+          }
 
           const LENGHT_VARS = 64;
-          const headData = log.data.slice(0, 1);
-          const bodyData = log.data.slice(2, log.data.length);
+          let bodyData = event.data.slice(2, event.data.length);
 
-          let row='';
-          const inputs = Array.from(bodyData).reduce((acc, item, index) => {
-            row+=item.toString();
-            if((index + 1) % LENGHT_VARS == 0 && index!= 0) {
-              acc.push(row);
-              row = '';
-            }
-            return acc;
-          }, []);
+          let args = [];
+          let tail = bodyData;
 
-          const outputs = inputs.map(input => {
-            return (web3.eth.abi.decodeParameter('uint', input));
+          while (tail.length > 0) {
+            const head = tail.slice(0, LENGHT_VARS);
+            tail = tail.slice(LENGHT_VARS, tail.length);
+            args.push(head);
+          }
+
+          const largs = args.map((a) => {
+            const out = {'hex': a};
+
+            ['int256', 'string', 'address', 'bool'].forEach((type)=>{
+              console.log('DEBUG PV ', type, a.arg);
+
+              try {
+                out[type] = web3.eth.abi.decodeParameter(type, a);
+              } catch (e) {
+                console.log("Error parsing ABI:", type, a);
+                out[type] = '';
+              }
+
+            });
+
+            return out;
           });
-          return outputs;
+
+          return {topic: topic, args: largs};
         });
 
-        console.log('tx.logs', tx.logs);
+        console.log('tx.logs', JSON.stringify(tx.logs));
 
-      } catch (e) {
-        console.log("Error parsing ABI:", e);
-      }
     }
     tx.traces = [];
     tx.failed = false;

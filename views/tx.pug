@@ -1,6 +1,7 @@
 extends layout
 
 block content
+
   h3 Transaction #{tx.hash}
   table.table
     tr
@@ -48,15 +49,32 @@ block content
     if tx.logs
       tr
         td Events:
-        for log in tx.logs
-          tr
-            td
+        td
+          table.table
+            for log in tx.logs
               tr
                 td Address
                 td #{tx.to}
               tr
                 td Topic
-                td #{topic}
+                td #{log.topic}
+              tr
+                td
+                td
+                  for arg, ix in log.args
+                    div.input-group
+                      .input-group-btn
+                        select.form-control(id="event"+ix)
+                          option(value='hex') Hex
+                          option(value='int256') Number
+                          option(value='string') Text
+                          option(value='address') address
+                          option(value='bool') Boolean
+                        span.form-control.hex #{arg['hex']}
+                        span.form-control.hide.int256 #{arg['int256']}
+                        span.form-control.hide.string #{arg['string']}
+                        span.form-control.hide.address #{arg['address']}
+                        span.form-control.hide.bool #{arg['bool']}
 
     tr
       td Data:
