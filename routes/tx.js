@@ -6,6 +6,13 @@ var Web3 = require('web3');
 var abi = require('ethereumjs-abi');
 var abiDecoder = require('abi-decoder');
 
+var typeInput = [
+      { name: 'Hex', type: 'hex' },
+      { name: 'Number', type: 'int256' },
+      { name: 'Text', type: 'string' },
+      { name: 'Address', type: 'address' },
+      { name: 'Bolean', type: 'bool' }];
+
 router.get('/pending', function(req, res, next) {
 
   var config = req.app.get('config');
@@ -100,17 +107,33 @@ router.get('/:tx', function(req, res, next) {
     // Try to match the tx to a solidity function call if the contract source is available
     if (receipt.logs) {
       try {
-        console.log('logs - MARIA ENID', tx, receipt);
-        console.log(web3.utils.hexToBytes(receipt.logs[0].topics[0]));
+        tx.logs = []
+        tx.logs = receipt.logs.map(log => {
+          const str = web3.utils.toHex(log.topics[0]);
+          topic = log.topics.length > 1 ? log.topics[3] : log.topics[0];
 
-        const logs = receipt.logs.map(log => {
-          console.log('datoss', log.topics.length, log.topics);
+          const LENGHT_VARS = 64;
+          const headData = log.data.slice(0, 1);
+          const bodyData = log.data.slice(2, log.data.length);
 
-          const topic = log.topics.length > 1 ? log.topics[3] : log.topics[0];
-          const decode = web3.eth.abi.decodeLog(['uint', 'uint', 'uint', 'uint', 'uint', 'uint'], log.data, topic);
-          return { decode };
+          let row='';
+          const inputs = Array.from(bodyData).reduce((acc, item, index) => {
+            row+=item.toString();
+            if((index + 1) % LENGHT_VARS == 0 && index!= 0) {
+              acc.push(row);
+              row = '';
+            }
+            return acc;
+          }, []);
+
+          const outputs = inputs.map(input => {
+            return (web3.eth.abi.decodeParameter('uint', input));
+          });
+          return outputs;
         });
-        console.log('logs', logs);
+
+        console.log('tx.logs', tx.logs);
+
       } catch (e) {
         console.log("Error parsing ABI:", e);
       }
