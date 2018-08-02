@@ -10,30 +10,23 @@ router.get('/:block', function(req, res, next) {
   var web3 = new Web3();
   web3.setProvider(config.provider);
 
-  web3._extend({
+/*
+  web3.extend({
     property: 'debug',
     methods: [
-      new web3._extend.Method({
+      new web3.extend.methods({
          name: 'traceBlockByNumber',
          call: 'debug_traceBlockByNumber',
          params: 1,
       })
     ]
   });
+*/
 
   async.waterfall([
     function(callback) {
       web3.eth.getBlock(req.params.block, true, function(err, result) {
         callback(err, result);
-      });
-    }, function(result, callback) {
-      if (!result) {
-        return next({name : "BlockNotFoundError", message : "Block not found!"});
-      }
-      console.log('block',result);
-      web3.debug.traceBlockByNumber(result.number, function(err, traces) {
-        callback(err, result, traces);
-	if(err){console.log('DEBUG', err);}
       });
     }
   ], function(err, block, traces) {
@@ -41,22 +34,23 @@ router.get('/:block', function(req, res, next) {
       return next(err);
     }
 
-    block.transactions.forEach(function(tx) {
-      tx.traces = [];
-      tx.failed = false;
-      if (traces != null) {
-        traces.forEach(function(trace) {
-          if (tx.hash === trace.transactionHash) {
-            tx.traces.push(trace);
-            if (trace.error) {
-              tx.failed = true;
-              tx.error = trace.error;
+    if(block) {
+      block.transactions.forEach(function(tx) {
+        tx.traces = [];
+        tx.failed = false;
+        if (traces != null) {
+          traces.forEach(function(trace) {
+            if (tx.hash === trace.transactionHash) {
+              tx.traces.push(trace);
+              if (trace.error) {
+                tx.failed = true;
+                tx.error = trace.error;
+              }
             }
-          }
-        });
-      }
-      // console.log(tx);
-    });
+          });
+        }
+      });
+    }
     res.render('block', { block: block });
   });
 

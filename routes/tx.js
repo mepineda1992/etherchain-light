@@ -21,14 +21,10 @@ router.get('/pending', function(req, res, next) {
 
   async.waterfall([
     function(callback) {
-      web3.eth.filter("pending").watch(
-          function(error,result){
-            callback(error, result);
-              if (!error) {
-                  console.log(result);
-              }
-          }
-      )
+      web3.eth.subscribe('pendingTransactions', function(error, result){
+          if (!error)
+              console.log('da', result);
+      })
     }
   ], function(err, txs) {
     if (err) {

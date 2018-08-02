@@ -15,7 +15,7 @@ block content
         tr
           td
             a(href="/block/" + block.number) #{block.number}
-          td 
+          td
             a(href="/account/" + block.author) #{nameformatter.format(block.author)}
           td #{moment.unix(block.timestamp).format()}
           td #{block.transactions.length}
