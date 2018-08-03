@@ -6,6 +6,13 @@ var Web3 = require('web3');
 var abi = require('ethereumjs-abi');
 var abiDecoder = require('abi-decoder');
 
+var typeInput = [
+      { name: 'Hex', type: 'hex' },
+      { name: 'Number', type: 'int256' },
+      { name: 'Text', type: 'string' },
+      { name: 'Address', type: 'address' },
+      { name: 'Bolean', type: 'bool' }];
+
 router.get('/pending', function(req, res, next) {
 
   var config = req.app.get('config');
@@ -14,14 +21,10 @@ router.get('/pending', function(req, res, next) {
 
   async.waterfall([
     function(callback) {
-      web3.eth.filter("pending").watch(
-          function(error,result){
-            callback(error, result);
-              if (!error) {
-                  console.log(result);
-              }
-          }
-      )
+      web3.eth.subscribe('pendingTransactions', function(error, result){
+          if (!error)
+              console.log('da', result);
+      })
     }
   ], function(err, txs) {
     if (err) {
@@ -99,22 +102,49 @@ router.get('/:tx', function(req, res, next) {
 
     // Try to match the tx to a solidity function call if the contract source is available
     if (receipt.logs) {
-      //tx.source = JSON.parse(receipt.logs);
-      //console.log('tx.source', tx.source);
-      try {
-        //var jsonAbi = JSON.parse(tx.source.abi);
-        //abiDecoder.addABI(jsonAbi);
-        //console.log('madia', receipt.logs, tx.input);
-        const logs = receipt.logs.map(log => {
-          console.log('que raro', web3.sha3(log.data, {encoding: 'hex'}));
-          return { topics: log.topics, data: log.data };
+        tx.logs = receipt.logs.map(event => {
+          if (event.topics.length > 0) {
+            topic = event.topics[0];
+
+          } else {
+            topic = 'no topic'
+          }
+
+          const LENGHT_VARS = 64;
+          let bodyData = event.data.slice(2, event.data.length);
+
+          let args = [];
+          let tail = bodyData;
+
+          while (tail.length > 0) {
+            const head = tail.slice(0, LENGHT_VARS);
+            tail = tail.slice(LENGHT_VARS, tail.length);
+            args.push(head);
+          }
+
+          const largs = args.map((a) => {
+            const out = {'hex': a};
+
+            ['int256', 'string', 'address', 'bool'].forEach((type)=>{
+              console.log('DEBUG PV ', type, a.arg);
+
+              try {
+                out[type] = web3.eth.abi.decodeParameter(type, a);
+              } catch (e) {
+                console.log("Error parsing ABI:", type, a);
+                out[type] = '';
+              }
+
+            });
+
+            return out;
+          });
+
+          return {topic: topic, args: largs};
         });
-        console.log('datos', logs);
-        //tx.logs = receipt.logs;
-        //tx.callInfo = tx.input;
-      } catch (e) {
-        console.log("Error parsing ABI:", e);
-      }
+
+        console.log('tx.logs', JSON.stringify(tx.logs));
+
     }
     tx.traces = [];
     tx.failed = false;

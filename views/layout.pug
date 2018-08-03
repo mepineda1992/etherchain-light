@@ -32,8 +32,7 @@ html(lang="en")
               a(href='/') Home
             li
               a(href='/accounts') Accounts
-            li
-              a(href='/tx/pending') Pending Tx
+
             li.dropdown
               a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
                 | Tools
@@ -58,6 +57,12 @@ html(lang="en")
     script.
       $(function () {
         $('[data-toggle="tooltip"]').tooltip()
+
+        $('select.form-control').on('change',
+           function(e){
+             $(e.currentTarget).parent().find('span').addClass('hide');
+             $(e.currentTarget).parent().find('span.'+this.value).removeClass('hide');
+        });
       })
 
     div.container
