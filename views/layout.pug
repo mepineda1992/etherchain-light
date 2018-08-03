@@ -18,7 +18,7 @@ html(lang="en")
     link(rel='stylesheet', href=basepath + '/stylesheets/style.css')
 
   body
-    nav.navbar.navbar-inverse.navbar-fixed-top
+    nav.navbar.navbar-inverse
       .container
         .navbar-header
           button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
@@ -48,7 +48,7 @@ html(lang="en")
                 li
                   a(href=basepath + '/signature/verify') Verify Signature
 
-          form.navbar-form.navbar-right(action="/explorer/search", method="POST")
+          form.navbar-form.navbar-right(action=basepath + "/search", method="POST")
             .form-group
               input.form-control#search(type='text', placeholder='Block / Tx / Account', name='search')
             |
