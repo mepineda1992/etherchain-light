@@ -19,7 +19,12 @@ var config = new(require('./config.js'))();
 var levelup = require('levelup');
 var db = levelup('./data');
 
+// var basepath = "/explorer";
+var basepath = process.env.ETHERCHAIN_LIGHT_BASEPATH;
+
 var app = express();
+
+app.locals.basepath = basepath;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -45,14 +50,14 @@ app.locals.nameformatter = new(require('./utils/nameformatter.js'))(config);
 app.locals.nodeStatus = new(require('./utils/nodeStatus.js'))(config);
 app.locals.config = config;
 
-app.use('/explorer/', index);
-app.use('/explorer/block', block);
-app.use('/explorer/tx', tx);
-app.use('/explorer/account', account);
-app.use('/explorer/accounts', accounts);
-app.use('/explorer/contract', contract);
-app.use('/explorer/signature', signature);
-app.use('/explorer/search', search);
+app.use(basepath + '/', index);
+app.use(basepath + '/block', block);
+app.use(basepath + '/tx', tx);
+app.use(basepath + '/account', account);
+app.use(basepath + '/accounts', accounts);
+app.use(basepath + '/contract', contract);
+app.use(basepath + '/signature', signature);
+app.use(basepath + '/search', search);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
