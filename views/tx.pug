@@ -3,6 +3,7 @@
 extends layout
 
 block content
+
   h3 Transaction #{tx.hash}
   table.table
     tr
@@ -46,59 +47,61 @@ block content
     tr
       td Fee:
       td #{ethformatter(tx.gasUsed * tx.gasPrice)}
-    if tx.callInfo
-      tr
-        td Function Name:
-        td #{tx.callInfo.name}
-      tr
-        td Parameters:
-        td
-          table.table
-            thead
-              tr
-                th Name
-                th Type
-                th Value
-            tbody
-              for pa in tx.callInfo.params
-                tr
-                  td #{pa.name}
-                  td #{pa.type}
-                  if pa.type === "bytes" && pa.value
-                    td
-                      pre 0x#{pa.value.toString("hex")}
-                  else if pa.type === "uint256" && pa.value
-                    td.parameter-cell #{pa.value.toString(10)}
-                  else
-                    td.parameter-cell #{JSON.stringify(pa.value, null, 2)}
+    //-if tx.callInfo
+    //-  tr
+    //-    td Function Name:
+    //-    td #{tx.callInfo.name}
+    //-  tr
+    //-    td Parameters:
+    //-    td
+    //-      table.table
+    //-        thead
+    //-          tr
+    //-            th Name
+    //-            th Type
+    //-            th Value
+    //-        tbody
+    //-          for pa in tx.callInfo.params
+    //-            tr
+    //-              td #{pa.name}
+    //-              td #{pa.type}
+    //-              if pa.type === "bytes" && pa.value
+    //-                td
+    //-                  pre 0x#{pa.value.toString("hex")}
+    //-              else if pa.type === "uint256" && pa.value
+    //-                td.parameter-cell #{pa.value.toString(10)}
+    //-              else
+    //-                td.parameter-cell #{JSON.stringify(pa.value, null, 2)}
     if tx.logs
       tr
         td Events:
         td
-          for log in tx.logs
-            table.table
-              thead
-                tr
-                  th Name
-                  th Events
-                  th Address
-              tbody
-                tr
-                  td #{log.name}
-                  td
-                    table.table
-                      thead
-                        tr
-                          th Name
-                          th Type
-                          th Value
-                      tbody
-                        for event in log.events
-                          tr
-                            td #{event.name}
-                            td #{event.type}
-                            td #{event.value}
-                  td #{log.address}
+          table.table
+            for log in tx.logs
+              tr
+                td Address
+                td #{tx.to}
+              tr
+                td Topic
+                td #{log.topic}
+              tr
+                td
+                td
+                  for arg, ix in log.args
+                    div.input-group
+                      .input-group-btn
+                        select.form-control(id="event"+ix)
+                          option(value='hex') Hex
+                          option(value='int256') Number
+                          option(value='string') Text
+                          option(value='address') address
+                          option(value='bool') Boolean
+                        span.form-control.hex #{arg['hex']}
+                        span.form-control.hide.int256 #{arg['int256']}
+                        span.form-control.hide.string #{arg['string']}
+                        span.form-control.hide.address #{arg['address']}
+                        span.form-control.hide.bool #{arg['bool']}
+
     tr
       td Data:
       td

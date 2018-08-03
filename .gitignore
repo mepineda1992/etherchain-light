@@ -59,3 +59,5 @@ typings/
 
 # Data directory
 data/
+*.swp
+./utils/solc-bin
