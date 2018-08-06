@@ -1,6 +1,18 @@
 body {
   padding: 50px;
+
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 0px;
+  }
+
+  h3 {
+    word-wrap: break-word;
+  }
+
 }
 
 a {
@@ -14,6 +26,7 @@ a {
 nav-explorer {
   position: relative;
 }
+
 pre {
     white-space: pre-wrap;       /* Since CSS 2.1 */
     white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */

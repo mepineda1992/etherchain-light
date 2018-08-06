@@ -9,7 +9,7 @@ block content
     tr
       td Hash:
       td
-        a(href=basepath + "/tx/" + tx.hash) #{tx.hash}
+        a(href=basepath + "/tx/" + tx.hash).text-wrap #{tx.hash}
     tr
       td Block hash:
       td
@@ -47,31 +47,6 @@ block content
     tr
       td Fee:
       td #{ethformatter(tx.gasUsed * tx.gasPrice)}
-    //-if tx.callInfo
-    //-  tr
-    //-    td Function Name:
-    //-    td #{tx.callInfo.name}
-    //-  tr
-    //-    td Parameters:
-    //-    td
-    //-      table.table
-    //-        thead
-    //-          tr
-    //-            th Name
-    //-            th Type
-    //-            th Value
-    //-        tbody
-    //-          for pa in tx.callInfo.params
-    //-            tr
-    //-              td #{pa.name}
-    //-              td #{pa.type}
-    //-              if pa.type === "bytes" && pa.value
-    //-                td
-    //-                  pre 0x#{pa.value.toString("hex")}
-    //-              else if pa.type === "uint256" && pa.value
-    //-                td.parameter-cell #{pa.value.toString(10)}
-    //-              else
-    //-                td.parameter-cell #{JSON.stringify(pa.value, null, 2)}
     if tx.logs
       tr
         td Events:
