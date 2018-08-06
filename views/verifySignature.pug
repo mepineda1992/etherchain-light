@@ -1,3 +1,5 @@
+//- var basepath = basepath
+
 extends layout
 
 block content
@@ -5,7 +7,7 @@ block content
     h2 Verify Ethereum signatures
     .row
       .col-md-12
-        form(action="/signature/verify", method="post")
+        form(action=basepath + "/signature/verify", method="post")
           .form-group
             label(for="ethereumAddress") Ethereum Address
             input.form-control#ethereumAddress(type="text", placeholder="0x...", name="ethereumAddress", value=ethereumAddress)
@@ -15,8 +17,8 @@ block content
           .form-group
             label(for="signature") Signature (obtained via eth.sign(address, web3.sha3(message))
             input.form-control#signature(type="text", placeholder="0x...", name="signature", value=signature)
-          button.btn.btn-default.pull-right(type="submit") Verify    
-    if result    
+          button.btn.btn-default.pull-right(type="submit") Verify
+    if result
       br
       .row
         .col-md-12

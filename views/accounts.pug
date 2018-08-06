@@ -1,3 +1,5 @@
+//- var basepath = basepath
+
 extends layout
 
 block content
@@ -11,8 +13,8 @@ block content
     tbody
       for account in accounts
         tr
-          td 
-            a(href="/account/" + account.address) #{nameformatter.format(account.address)}
+          td
+            a(href=basepath + "/account/" + account.address) #{nameformatter.format(account.address)}
           td #{account.type}
           td #{ethformatter(account.balance)}
-  a.btn.btn-default(href="/accounts/" + lastAccount) Next Page
+  a.btn.btn-default(href=basepath + "/accounts/" + lastAccount) Next Page
