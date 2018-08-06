@@ -20,7 +20,7 @@ var levelup = require('levelup');
 var db = levelup('./data');
 
 // var basepath = "/explorer";
-var basepath = process.env.ETHERCHAIN_LIGHT_BASEPATH;
+var basepath = process.env.ETHERCHAIN_LIGHT_BASEPATH || '/explorer';
 
 var app = express();
 

@@ -91,13 +91,13 @@ block content
                     div.input-group
                       .input-group-btn
                         select.form-control(id="event"+ix)
-                          option(value='hex') Hex
                           option(value='int256') Number
+                          option(value='hex') Hex
                           option(value='string') Text
                           option(value='address') address
                           option(value='bool') Boolean
-                        span.form-control.hex #{arg['hex']}
-                        span.form-control.hide.int256 #{arg['int256']}
+                        span.form-control.int256 #{arg['int256']}
+                        span.form-control.hide.hex #{arg['hex']}
                         span.form-control.hide.string #{arg['string']}
                         span.form-control.hide.address #{arg['address']}
                         span.form-control.hide.bool #{arg['bool']}
