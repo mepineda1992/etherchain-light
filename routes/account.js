@@ -11,6 +11,7 @@ router.get('/:account', function(req, res, next) {
   web3.setProvider(config.provider);
 
   var db = req.app.get('db');
+  var dbEvent = req.app.get('dbEvent');
 
   var data = {};
 
@@ -113,7 +114,22 @@ router.get('/:account', function(req, res, next) {
 
     data.blocks = data.blocks.reverse().splice(0, 100);
 
-    res.render('account', { account: data });
+    if (!req.params.offset) {
+      req.params.offset = 0;
+    } else {
+      req.params.offset = parseInt(req.params.offset);
+    }
+    dbEvent.find({_id: req.params.account}).exec(function (err, tokenBalance) {
+
+      if (err) {
+        return next(err);
+      }
+
+      dbEvent.find( {$or: [{ "args._from": req.params.account }, { "args._to": req.params.account }] }).sort({ timestamp: -1 }).skip(req.params.offset).limit(50).exec(function(err, events) {
+        res.render('account', { account: data, balance: tokenBalance[0], events: events, offset: req.params.offset, stepSize: 50 });
+      });
+    });
+
   });
 
 });

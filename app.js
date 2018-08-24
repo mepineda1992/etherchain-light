@@ -13,11 +13,44 @@ var accounts = require('./routes/accounts');
 var contract = require('./routes/contract');
 var signature = require('./routes/signature');
 var search = require('./routes/search');
+var event = require('./routes/event');
+var events = require('./routes/events');
 
 var config = new(require('./config.js'))();
+var Datastore = require('nedb-core')
+
+var dbEvent = new Datastore({ filename: './data.db', autoload: true });
 
 var levelup = require('levelup');
 var db = levelup('./data');
+
+dbEvent.ensureIndex({ fieldName: 'balance' }, function (err) {
+  if (err) {
+    console.log("Error creating balance db index:", err);
+  }
+});
+
+dbEvent.ensureIndex({ fieldName: 'timestamp' }, function (err) {
+  if (err) {
+    console.log("Error creating timestamp db index:", err);
+  }
+});
+
+dbEvent.ensureIndex({ fieldName: 'args._from' }, function (err) {
+  if (err) {
+    console.log("Error creating _from db index:", err);
+  }
+});
+
+dbEvent.ensureIndex({ fieldName: 'args._to' }, function (err) {
+  if (err) {
+    console.log("Error creating _to db index:", err);
+  }
+});
+
+var exporterService = require('./services/exporter.js');
+var exporter = new exporterService(config, dbEvent);
+
 
 // var basepath = "/explorer";
 var basepath = process.env.ETHERCHAIN_LIGHT_BASEPATH || '/explorer';
@@ -31,6 +64,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.set('config', config);
 app.set('db', db);
+app.set('dbEvent', dbEvent);
 app.set('trust proxy', true);
 
 // uncomment after placing your favicon in /public
@@ -59,7 +93,15 @@ app.use(basepath + '/account', account);
 app.use(basepath + '/accounts', accounts);
 app.use(basepath + '/contract', contract);
 app.use(basepath + '/signature', signature);
+app.use(basepath + '/event', event);
+app.use(basepath + '/events', events);
 app.use(basepath + '/search', search);
+
+app.locals.moment = require('moment');
+app.locals.nodeStatus = new(require('./utils/nodeStatus.js'))(config);
+app.locals.nameformatter = new(require('./utils/nameformatter.js'))(config);
+app.locals.tokenformatter = new(require('./utils/tokenformatter.js'))(config);
+app.locals.config = config;
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

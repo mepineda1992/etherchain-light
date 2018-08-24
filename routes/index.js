@@ -7,6 +7,9 @@ var Web3 = require('web3');
 
 router.get('/', function(req, res, next) {
 
+  var db = req.app.get('db');
+  var dbEvent = req.app.get('dbEvent');
+
   var config = req.app.get('config');
   var web3 = new Web3();
   web3.setProvider(config.provider);
@@ -47,7 +50,11 @@ router.get('/', function(req, res, next) {
         txs.push(tx);
       });
     });
-    res.render('index', { blocks: blocks, txs: txs });
+
+    dbEvent.find({}).sort({ timestamp: -1 }).limit(10).exec(function (err, events) {
+      //res.render('index', { events: events });
+      res.render('index', { blocks: blocks, txs: txs, events: events });
+    });
   });
 
 });

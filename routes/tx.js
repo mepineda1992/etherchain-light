@@ -125,11 +125,14 @@ router.get('/:tx', function(req, res, next) {
           const largs = args.map((a) => {
             const out = {'hex': a};
 
-            ['int256', 'string', 'address', 'bool'].forEach((type)=>{
+            ['int256', 'bytes', 'address', 'bool'].forEach((type)=>{
               console.log('DEBUG PV ', type, a.arg);
 
               try {
-                out[type] = web3.eth.abi.decodeParameter(type, a);
+                //out[type] = web3.eth.abi.decodeParameter(type, a);
+                const data = Buffer.from([ a ].join(''), 'hex');
+                out[type] = abi.rawDecode([type], data)
+                console.log('outs', out[type].bufferToInt)
               } catch (e) {
                 console.log("Error parsing ABI:", type, a);
                 out[type] = '';

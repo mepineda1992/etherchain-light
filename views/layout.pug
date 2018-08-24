@@ -1,3 +1,5 @@
+include ./mixins/event.pug
+
 doctype html
 html(lang="en")
   head
@@ -34,6 +36,9 @@ html(lang="en")
               a(href=basepath + '/accounts') Accounts
             //-li
             //-  a(href=basepath + '/tx/pending') Pending Tx
+            li
+              a(href=basepath + '/events') Events
+
             li.dropdown
               a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
                 | Tools
@@ -45,6 +50,7 @@ html(lang="en")
                   a(href=basepath + '/contract/verify') Verify Contract
                 li
                   a(href=basepath + '/signature/verify') Verify Signature
+
 
           form.navbar-form.navbar-right(action=basepath + "/search", method="POST")
             .form-group

@@ -46,3 +46,22 @@ block content
               else
                 | New Contract
             td #{ethformatter(tx.value)}
+
+            td
+              tx
+  h3 Recent ERC-20 Transactions
+    div
+      .row
+        .col-md-12
+          .table-responsive
+            table.table
+              thead
+                tr
+                  th Type
+                  th From
+                  th To
+                  th Amount
+                  th Date
+              tbody
+                for event in events
+                  +event_row(event)
