@@ -30,7 +30,7 @@ var config = function () {
 
   this.tokenShortName = "Lotos";
   this.tokenAddress = process.env["LOTO_CONTRACT_ADDRESS"] || "0x20bc7fa7f6f4a8cc67ccf672581e162f97b1ce60";
-  this.tokenDecimals = 1;
+  this.tokenDecimals = 0;
   this.tokenName = "LotoToken";
   this.tokenDescription = "LotoToken";
   this.tokenTotalSupply = -1;
