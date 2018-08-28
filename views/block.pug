@@ -3,107 +3,117 @@
 extends layout
 
 block content
-  br
-  .row
-    .col-md-1
-      a.btn.btn-primary(href=basepath + "/block/" + (block.number - 1), role="button") Previous
-    .col-md-10.text-center
-      h3 Block #{block.number}
-    .col-md-1
-      a.btn.btn-primary(href=basepath + "/block/" + (block.number + 1), role="button") Next
 
-  table.table
-    tr
-      td Hash:
-      td #{block.hash}
-    tr
-      td Parent hash:
-      td
-        a(href=basepath + "/block/" + block.parentHash) #{block.parentHash}
-    tr
-      td Miner:
-      td
-        a(href=basepath + "/account/" + block.author) #{nameformatter.format(block.author)}
-    tr
-      td Gas Limit:
-      td #{numeral(block.gasLimit).format()}
-    tr
-      td Gas Used:
-      td #{numeral(block.gasUsed).format()}
-    tr
-      td Difficulty:
-      td #{numeral(block.difficulty).format()}
-    tr
-      td Total Difficulty:
-      td #{numeral(block.totalDifficulty).format()}
-    tr
-      td Timestamp:
-      td #{moment.unix(block.timestamp).format()} (#{moment.unix(block.timestamp).fromNow()})
-    tr
-      td Size:
-      td #{numeral(block.size).format()}
-    tr
-      td Transactions:
-      td #{block.transactions.length}
-    tr
-      td Uncles:
-      td
-        if block.uncles && block.uncles.length > 0
-          each uncle, index in block.uncles
-            p
-              a(href="uncle/" + block.hash + "/" + index) #{index + " - " + uncle}
-        else
-          | 0
-  h4 Transactions
-  if block.transactions.length === 0
-    p Block does not contain any transactions.
-  else
-    table.table
-      thead
-        tr
-          th Hash
-          th Type
-          th From
-          th To
-          th Amount
-      tbody
-        for tx in block.transactions
-          tr
-            td
-              if tx.error
-                span(style="color: red", data-toggle="tooltip", data-placement="left", title=tx.error).glyphicon.glyphicon-warning-sign
-              a(href=basepath + "/tx/" + tx.hash)  #{tx.hash.substr(0, 10)}...
-            td Tx
-            td
-              a(href=basepath + "/account/" + tx.from) #{nameformatter.format(tx.from)}
-            td
-              if tx.to
-                a(href=basepath + "/account/" + tx.to) #{nameformatter.format(tx.to)}
-              else
-                | New Contract
-            td #{ethformatter(tx.value)}
-          for trace in tx.traces
+  div(class="ui width aligned padded grid")
+    div(class="row")
+      div(class="fourteen column")
+        a(class="ui blue labeled icon button left floated " href=basepath + "/block/" + (block.number - 1))
+          i(class="arrow left icon")
+          | Previous
+        a(class="ui blue right labeled icon button right floated" href=basepath + "/block/" + (block.number + 1))
+          i(class="right arrow icon")
+          | Next
+    div(class="row")
+      div(class="fourteen column")
+        table(class="ui very compact definition table")
+          thead
             tr
-              td.text-right
-                if trace.error
-                  span(style="color: red", data-toggle="tooltip", data-placement="left", title=trace.error).glyphicon.glyphicon-warning-sign
-                span.glyphicon.glyphicon-arrow-right
-              td.capitalize #{trace.type}
-              if trace.type === "call"
+              th
+              th
+                h3 Block #{block.number}
+          tbody
+            tr
+              td Hash:
+              td #{block.hash}
+            tr
+              td Parent hash:
+              td
+                a(href=basepath + "/block/" + block.parentHash) #{block.parentHash}
+            tr
+              td Miner:
+              td
+                a(href=basepath + "/account/" + block.author) #{nameformatter.format(block.author)}
+            tr
+              td Gas Limit:
+              td #{numeral(block.gasLimit).format()}
+            tr
+              td Gas Used:
+              td #{numeral(block.gasUsed).format()}
+            tr
+              td Difficulty:
+              td #{numeral(block.difficulty).format()}
+            tr
+              td Total Difficulty:
+              td #{numeral(block.totalDifficulty).format()}
+            tr
+              td Timestamp:
+              td #{moment.unix(block.timestamp).format()} (#{moment.unix(block.timestamp).fromNow()})
+            tr
+              td Size:
+              td #{numeral(block.size).format()}
+            tr
+              td Transactions:
+              td #{block.transactions.length}
+            tr
+              td Uncles:
+              td
+                if block.uncles && block.uncles.length > 0
+                  each uncle, index in block.uncles
+                    p
+                      a(href="uncle/" + block.hash + "/" + index) #{index + " - " + uncle}
+                else
+                  | 0
+    div(class="row")
+      div(class="fourteen column")
+        h4(class="ui header") 
+          i(class="blue angle double down icon")
+          | Transactions
+        table(class="ui blue very compact table")
+          thead
+            tr
+              th Type
+              th From
+              th To
+              th Amount
+              th Date
+          tbody
+            for tx in block.transactions
+              tr
                 td
-                  a(href=basepath + "/account/" + trace.action.from) #{nameformatter.format(trace.action.from)}
+                  if tx.error
+                    span(style="color: red", data-toggle="tooltip", data-placement="left", title=tx.error).glyphicon.glyphicon-warning-sign
+                  a(href=basepath + "/tx/" + tx.hash)  #{tx.hash.substr(0, 10)}...
+                td Tx
                 td
-                  a(href=basepath + "/account/" + trace.action.to) #{nameformatter.format(trace.action.to)}
-                td #{ethformatter(trace.action.value)}
-              else if trace.type === "create"
+                  a(href=basepath + "/account/" + tx.from) #{nameformatter.format(tx.from)}
                 td
-                  a(href=basepath + "/account/" + trace.action.from) #{nameformatter.format(trace.action.from)}
-                td
-                  a(href=basepath + "/account/" + trace.result.address) #{nameformatter.format(trace.result.address)}
-                td #{ethformatter(trace.action.value)}
-              else if trace.type === "suicide"
-                td
-                  a(href=basepath + "/account/" + trace.action.address) #{nameformatter.format(trace.action.address)}
-                td
-                  a(href=basepath + "/account/" + trace.action.refundAddress) #{nameformatter.format(trace.action.refundAddress)}
-                td #{ethformatter(trace.action.balance)}
+                  if tx.to
+                    a(href=basepath + "/account/" + tx.to) #{nameformatter.format(tx.to)}
+                  else
+                    | New Contract
+                td #{ethformatter(tx.value)}
+              for trace in tx.traces
+                tr
+                  td.text-right
+                    if trace.error
+                      span(style="color: red", data-toggle="tooltip", data-placement="left", title=trace.error).glyphicon.glyphicon-warning-sign
+                    span.glyphicon.glyphicon-arrow-right
+                  td.capitalize #{trace.type}
+                  if trace.type === "call"
+                    td
+                      a(href=basepath + "/account/" + trace.action.from) #{nameformatter.format(trace.action.from)}
+                    td
+                      a(href=basepath + "/account/" + trace.action.to) #{nameformatter.format(trace.action.to)}
+                    td #{ethformatter(trace.action.value)}
+                  else if trace.type === "create"
+                    td
+                      a(href=basepath + "/account/" + trace.action.from) #{nameformatter.format(trace.action.from)}
+                    td
+                      a(href=basepath + "/account/" + trace.result.address) #{nameformatter.format(trace.result.address)}
+                    td #{ethformatter(trace.action.value)}
+                  else if trace.type === "suicide"
+                    td
+                      a(href=basepath + "/account/" + trace.action.address) #{nameformatter.format(trace.action.address)}
+                    td
+                      a(href=basepath + "/account/" + trace.action.refundAddress) #{nameformatter.format(trace.action.refundAddress)}
+                    td #{ethformatter(trace.action.balance)}

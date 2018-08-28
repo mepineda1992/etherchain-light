@@ -1,23 +1,40 @@
 extends layout
 
-block content
-  .row
-    .col-md-10
-      h3 Events
-    .col-md-1
-      if offset - stepSize >= 0
-        a.btn.btn-default(href=basepath + "/events/" + (offset - stepSize)) Previous
-    .col-md-1
-        a.btn.btn-default(href=basepath + "/events/" + (offset + stepSize)) Next
-  .row
-    .col-md-12
-      .table-responsive
-        table.table
-          tr
-            th Type
-            th From
-            th To
-            th Amount
-            th Date
-          for event in events
-            +event_row(event)
+block content 
+  div(class="ui width aligned padded grid")
+    div(class="row")
+      div(class="fourteen column")
+        if offset - stepSize >= 0
+          a(class="ui blue labeled icon button left floated column" href=basepath + "/events/" + (offset - stepSize))
+            i(class="arrow left icon")
+            | Previous
+        a(class="ui blue right labeled icon button right floated column" href=basepath + "/events/" + (offset + stepSize))
+          i(class="right arrow icon")
+          | Next
+
+    div(class="row")
+      div(class="fourteen column")
+        h4(class="ui header") 
+          i(class="blue angle double down icon")
+          | Events
+        table(class="ui blue very compact table")
+          thead
+            tr
+              th Type
+              th From
+              th To
+              th Amount
+              th Date
+          tbody
+            for event in events
+              +event_row(event)
+  
+    div(class="row")
+      div(class="fourteen column")
+        if offset - stepSize >= 0
+          a(class="ui blue labeled icon button left floated column" href=basepath + "/events/" + (offset - stepSize))
+            i(class="arrow left icon")
+            | Previous
+        a(class="ui blue right labeled icon button right floated column" href=basepath + "/events/" + (offset + stepSize))
+          i(class="right arrow icon")
+          | Next

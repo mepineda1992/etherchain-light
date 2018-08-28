@@ -3,26 +3,29 @@
 extends layout
 
 block content
-  #home.container
-    h2 Verify Ethereum signatures
-    .row
-      .col-md-12
-        form(action=basepath + "/signature/verify", method="post")
-          .form-group
-            label(for="ethereumAddress") Ethereum Address
-            input.form-control#ethereumAddress(type="text", placeholder="0x...", name="ethereumAddress", value=ethereumAddress)
-          .form-group
-            label(for="message") Message
-            input.form-control#message(type="text", placeholder="Bacon ipsum dolor amet", name="message", value=message)
-          .form-group
-            label(for="signature") Signature (obtained via eth.sign(address, web3.sha3(message))
-            input.form-control#signature(type="text", placeholder="0x...", name="signature", value=signature)
-          button.btn.btn-default.pull-right(type="submit") Verify
-    if result
-      br
-      .row
-        .col-md-12
-          if result.ok
-            .alert.alert-success(role="alert") #{result.ok}
-          else
-            .alert.alert-danger(role="alert") #{result.error}
+  div(class="ui width aligned padded grid")
+    div(class="fourteen column")
+      h4(class="ui header") 
+        i(class="blue angle double down icon")
+        | Verify Ethereum signatures
+      form(class="ui form" action=basepath + "/signature/verify", method="post")
+        div(class="field")
+          label(for="ethereumAddress") Ethereum Address
+          div(class="ui fluid input")
+            input(type="text", placeholder="0x...", name="ethereumAddress", value=ethereumAddress)
+        div(class="field")
+          label(for="message") Message
+          div(class="ui fluid input")
+            input(type="text", placeholder="Bacon ipsum dolor amet", name="message", value=message)
+        div(class="field")
+          label(for="signature") Signature (obtained via eth.sign(address, web3.sha3(message))
+          div(class="ui fluid input")
+            input(type="text", placeholder="0x...", name="signature", value=signature)
+        button(class="ui blue right labeled icon button floated" type="submit")
+          i(class="right file outline icon")
+          | Verify
+      if result
+        if result.ok
+          .alert.alert-success(role="alert") #{result.ok}
+        else
+          .alert.alert-danger(role="alert") #{result.error}

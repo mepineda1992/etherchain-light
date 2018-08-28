@@ -1,5 +1,8 @@
 extends layout
 
-block content       
-  h3 Event #{event._id}
-  pre #{JSON.stringify(event, null, "  ")}
+block content
+  div(class="ui width aligned padded grid")
+    div(class="fourteen column")
+      div(class="ui message")
+        div(class="header") Event #{event._id}
+        pre #{JSON.stringify(event, null, "  ")}

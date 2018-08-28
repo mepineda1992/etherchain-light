@@ -3,26 +3,34 @@
 extends layout
 
 block content
-  h3 Verify contract source
-  form(action=basepath + "/contract/verify", method="post")
-    .form-group
-      label(for="contractAddress") Contract address
-      input.form-control#contractAddress(type="text", placeholder="0x...", name="contractAddress")
-    .form-group
-      label(for="contractName") Contract name
-      input.form-control#contractName(type="text", placeholder="", name="contractName")
-    .form-group
-      label(for="contractSource") Contract Source
-      textarea.form-control#contractSource(rows=15, name="contractSource")
-    .form-group
-      label(for="compilerVersion") Compiler Version
-      select.form-control#compilerVersion(name="compilerVersion")
-        each version in versions
-          option #{version.path}
-    .form-group
-      label.checkbox-inline
-        input(type="checkbox", name="useOptimizations", checked)#useOptimizations
-        | Enable Optimization
-    button.btn.btn-default.pull-right(type="submit") Verify
-  if message
-    p #{message}
+  div(class="ui width aligned padded grid")
+    div(class="fourteen column")
+      h4(class="ui header") 
+        i(class="blue angle double down icon")
+        | Verify contract source
+      form(class="ui form" action=basepath + "/contract/verify", method="post")
+        div(class="field")
+          label(for="txHex") Contract address
+          div(class="ui fluid input")
+            input(type="text", placeholder="0x...", name="contractAddress")
+        div(class="field")
+          label(for="txHex") Contract name
+          div(class="ui fluid input")
+            input(type="text", placeholder="", name="contractName")
+        div(class="field")
+          label(for="txHex") Contract Source
+          textarea(name="contractSource")
+        div(class="field")
+          label(for="txHex") Compiler Version
+          select(name="compilerVersion" class="ui fluid search dropdown")
+            each version in versions
+              option(class="item") #{version.path}  
+        div(class="required inline field")
+          div(class="ui checkbox")
+            input(type="checkbox", name="useOptimizations", checked)
+            label Enable Optimization
+        button(class="ui blue right labeled icon button floated" type="submit")
+          i(class="right file outline icon")
+          | Verify
+    if message
+      p #{message}

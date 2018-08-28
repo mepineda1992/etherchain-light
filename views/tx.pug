@@ -4,118 +4,127 @@ extends layout
 
 block content
 
-  h3 Transaction #{tx.hash}
-  table.table
-    tr.tableFlex
-      td Hash:
-      td
-        a(href=basepath + "/tx/" + tx.hash) #{tx.hash}
-    tr.tableFlex
-      td Block hash:
-      td
-        a(href=basepath + "/block/" + tx.blockHash) #{tx.blockHash}
-    tr.tableFlex
-      td Block number:
-      td
-        a(href=basepath + "/block/" + tx.blockNumber) #{tx.blockNumber}
-    tr.tableFlex
-      td From:
-      td
-        a(href=basepath + "/account/" + tx.from) #{nameformatter.format(tx.from)}
-    tr.tableFlex
-      td To:
-      td
-        if tx.to
-          a(href=basepath + "/account/" + tx.to) #{nameformatter.format(tx.to)}
-        else
-          | New Contract
-    tr.tableFlex
-      td Amount:
-      td #{ethformatter(tx.value)}
-    tr.tableFlex
-      td Nonce:
-      td #{tx.nonce}
-    tr.tableFlex
-      td Gas Limit:
-      td #{tx.gas}
-    tr.tableFlex
-      td Gas Used:
-      td #{tx.gasUsed}
-    tr
-      td Gas Price:
-      td #{ethformatter(tx.gasPrice)}
-    tr.tableFlex
-      td Fee:
-      td #{ethformatter(tx.gasUsed * tx.gasPrice)}
-      if tx.logs
-        tr
-          td Events:
-          td
-            table.table
-              for log in tx.logs
-                tr.tableFlex
-                  td Address
-                  td #{tx.to}
-                tr.tableFlex
-                  td Topic
-                  td #{log.topic}
-                tr.tableFlex
-                  td Elements
-                    td
-                      for arg, ix in log.args
-                        div.form-group.form-control-sm.strong
-                            select.form-control(id="event"+ix)
-                              option(value='int256').strong Number
-                              option(value='hex').strong Hex
-                              option(value='string').strong Text
-                              option(value='address').strong address
-                              option(value='bool').strong Boolean
-                            span.form-control.int256 #{arg['int256']}
-                            span.form-control.hide.hex #{arg['hex']}
-                            span.form-control.hide.string #{arg['string']}
-                            span.form-control.hide.address #{arg['address']}
-                            span.form-control.hide.bool #{arg['bool']}
-    tr.tableFlex
-      td Data:
-      td
+  div(class="ui width aligned padded grid")
+    div(class="fourteen column")
+      table(class="ui very compact definition table")
+        thead
+          tr
+            th
+            th
+              h3 Transaction #{tx.hash}
+        tbody
+          tr.tableFlex
+            td Hash:
+            td
+              a(href=basepath + "/tx/" + tx.hash) #{tx.hash}
+          tr.tableFlex
+            td Block hash:
+            td
+              a(href=basepath + "/block/" + tx.blockHash) #{tx.blockHash}
+          tr.tableFlex
+            td Block number:
+            td
+              a(href=basepath + "/block/" + tx.blockNumber) #{tx.blockNumber}
+          tr.tableFlex
+            td From:
+            td
+              a(href=basepath + "/account/" + tx.from) #{nameformatter.format(tx.from)}
+          tr.tableFlex
+            td To:
+            td
+              if tx.to
+                a(href=basepath + "/account/" + tx.to) #{nameformatter.format(tx.to)}
+              else
+                | New Contract
+          tr.tableFlex
+            td Amount:
+            td #{ethformatter(tx.value)}
+          tr.tableFlex
+            td Nonce:
+            td #{tx.nonce}
+          tr.tableFlex
+            td Gas Limit:
+            td #{tx.gas}
+          tr.tableFlex
+            td Gas Used:
+            td #{tx.gasUsed}
+          tr
+            td Gas Price:
+            td #{ethformatter(tx.gasPrice)}
+          tr.tableFlex
+            td Fee:
+            td #{ethformatter(tx.gasUsed * tx.gasPrice)}
+            if tx.logs
+              tr
+                td Events:
+                td
+                  table(class="ui very compact definition table")
+                    for log, jx in tx.logs
+                      tr.tableFlex
+                        td Address
+                        td #{tx.to}
+                      tr.tableFlex
+                        td Topic
+                        td #{log.topic}
+                      tr.tableFlex
+                        td Elements
+                          td
+                            for arg, ix in log.args
+                              div(class="ui sub header")
+                                select(name="skills" class="ui fluid search dropdown")
+                                  option(value=""+arg.int256+","+ix+jx+"" class="item") Number
+                                  option(value=""+arg.hex+","+ix+jx+"" class="item") Hex
+                                  option(value=""+arg.string+","+ix+jx+"" class="item") Text
+                                  option(value=""+arg.address+","+ix+jx+"" class="item") address
+                                  option(value=""+arg.bool+","+ix+jx+"" class="item") Boolean
+                              div(class="ui fluid input")
+                                input(id="id"+ix+jx type="text" value=""+arg.int256+"")
+  div(class="ui width aligned padded grid")
+    div(class="fourteen column")
+      div(class="ui message")
+        div(class="header") Data
         pre #{tx.input}
 
-  a(href=basepath + "/tx/raw/" + tx.hash) Raw Trace
-  h4 Internal Transactions
-  table.table
-    thead
-      tr
-        th
-        th Type
-        th From
-        th To
-        th Amount
-    tbody
-      for trace in tx.traces
-        tr
-          td.text-right
-            if trace.error
-              span(style="color: red", data-toggle="tooltip", data-placement="left", title=trace.error).glyphicon.glyphicon-warning-sign
-              |
-          td.capitalize #{trace.type}
-          if trace.type === "call"
-            td
-              a(href=basepath + "/account/" + trace.action.from) #{nameformatter.format(trace.action.from)}
-            td
-              a(href=basepath + "/account/" + trace.action.to) #{nameformatter.format(trace.action.to)}
-            td #{ethformatter(trace.action.value)}
-          else if trace.type === "create"
-            td
-              a(href=basepath + "/account/" + trace.action.from) #{nameformatter.format(trace.action.from)}
-            td
-              if trace.result
-                a(href=basepath + "/account/" + trace.result.address) #{nameformatter.format(trace.result.address)}
-              else
-                div #{'-'}
-            td #{ethformatter(trace.action.value)}
-          else if trace.type === "suicide"
-            td
-              a(href=basepath + "/account/" + trace.action.address) #{nameformatter.format(trace.action.address)}
-            td
-              a(href=basepath + "/account/" + trace.action.refundAddress) #{nameformatter.format(trace.action.refundAddress)}
-            td #{ethformatter(trace.action.balance)}
+  div(class="ui width aligned padded grid")
+    div(class="fourteen column")
+      a(href=basepath + "/tx/raw/" + tx.hash) Raw Trace
+      h4(class="ui header") 
+        i(class="blue angle double down icon")
+        | Internal Transactions
+      table(class="ui blue very compact table")
+        thead
+          tr
+            th
+            th Type
+            th From
+            th To
+            th Amount
+        tbody
+          for trace in tx.traces
+            tr
+              td.text-right
+                if trace.error
+                  span(style="color: red", data-toggle="tooltip", data-placement="left", title=trace.error).glyphicon.glyphicon-warning-sign
+                  |
+              td.capitalize #{trace.type}
+              if trace.type === "call"
+                td
+                  a(href=basepath + "/account/" + trace.action.from) #{nameformatter.format(trace.action.from)}
+                td
+                  a(href=basepath + "/account/" + trace.action.to) #{nameformatter.format(trace.action.to)}
+                td #{ethformatter(trace.action.value)}
+              else if trace.type === "create"
+                td
+                  a(href=basepath + "/account/" + trace.action.from) #{nameformatter.format(trace.action.from)}
+                td
+                  if trace.result
+                    a(href=basepath + "/account/" + trace.result.address) #{nameformatter.format(trace.result.address)}
+                  else
+                    div #{'-'}
+                td #{ethformatter(trace.action.value)}
+              else if trace.type === "suicide"
+                td
+                  a(href=basepath + "/account/" + trace.action.address) #{nameformatter.format(trace.action.address)}
+                td
+                  a(href=basepath + "/account/" + trace.action.refundAddress) #{nameformatter.format(trace.action.refundAddress)}
+                td #{ethformatter(trace.action.balance)}

@@ -3,11 +3,17 @@
 extends layout
 
 block content
-  h3 Submit raw transaction
-  form(action=basepath + "/tx/submit", method="post")
-    .form-group
-      label(for="txHex") Signed Transaction Hex
-      textarea.form-control#txHex(rows=15, name="txHex", placeholder="0x...")
-    button.btn.btn-default.pull-right(type="submit") Submit
-  if message
-    p #{message}
+  div(class="ui width aligned padded grid")
+    div(class="fourteen column")
+      h4(class="ui header") 
+        i(class="blue angle double down icon")
+        | Submit raw transaction
+      form(class="ui form" action=basepath + "/tx/submit", method="post")
+        div(class="field")
+          label(for="txHex") Signed Transaction Hex
+          textarea(name="txHex", placeholder="0x...")
+        button(class="ui blue right labeled icon button floated" type="submit")
+          i(class="right file outline icon")
+          | Submit
+    if message
+      p #{message}
