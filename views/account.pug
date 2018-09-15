@@ -12,7 +12,8 @@ block content
       td Balance:
       td #{ethformatter(account.balance)}
       td Token Balance:
-      td #{tokenformatter.format(balance.balance)}
+      if(balance)
+        td #{tokenformatter.format(balance.balance)}
 
     if account.name
       tr
