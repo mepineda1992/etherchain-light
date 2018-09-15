@@ -4,7 +4,7 @@ extends layout
 
 block content
 
-  div(class="ui width aligned padded grid")
+  div(class="ui width aligned padded grid word-break")
     div(class="fourteen column")
       table(class="ui very compact definition table")
         thead
@@ -88,7 +88,7 @@ block content
   div(class="ui width aligned padded grid")
     div(class="fourteen column")
       a(href=basepath + "/tx/raw/" + tx.hash) Raw Trace
-      h4(class="ui header") 
+      h4(class="ui header")
         i(class="blue angle double down icon")
         | Internal Transactions
       table(class="ui blue very compact table")

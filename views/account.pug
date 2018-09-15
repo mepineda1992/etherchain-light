@@ -6,7 +6,7 @@ block content
 
   div(class="ui width aligned padded grid")
     div(class="fourteen column")
-      h4(class="ui header") 
+      h4(class="ui header")
         i(class="blue angle double down icon")
         if account.isContract
           | Contract #{account.address}
@@ -18,7 +18,8 @@ block content
             td(class="ui sub header") Balance:
             td #{ethformatter(account.balance)}
             td(class="ui sub header") Token Balance:
-            td #{tokenformatter.format(balance.balance)}
+            if balance != undefined
+             td #{tokenformatter.format(balance.balance)}
 
   div(class="ui width aligned padded grid")
     div(class="fourteen column")
@@ -30,7 +31,7 @@ block content
           a(class="item active" data-tab="Source") Source
           a(class="item active" data-tab="Contract") Contract State
       div(class="ui bottom attached tab segment active" data-tab="Transactions")
-        h4(class="ui header") 
+        h4(class="ui header")
           i(class="yellow angle double down icon")
           | Recent Activity
         table(class="ui blue very compact table")
@@ -102,7 +103,7 @@ block content
                         a(href=basepath + "/account/" + trace.action.refundAddress) #{nameformatter.format(trace.action.refundAddress)}
                       td #{ethformatter(trace.action.balance)}
 
-        h4(class="ui header") 
+        h4(class="ui header")
           i(class="yellow angle double down icon")
           | ERC-20 Transactions
         table(class="ui blue very compact table")

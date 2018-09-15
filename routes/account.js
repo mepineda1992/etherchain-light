@@ -125,7 +125,7 @@ router.get('/:account', function(req, res, next) {
         return next(err);
       }
 
-      dbEvent.find( {$or: [{ "args._from": req.params.account }, { "args._to": req.params.account }] }).sort({ timestamp: -1 }).skip(req.params.offset).limit(50).exec(function(err, events) {
+      dbEvent.find( {or: [{ "args._from": req.params.account }, { "args._to": req.params.account }] }).sort({ timestamp: -1 }).skip(req.params.offset).limit(50).exec(function(err, events) {
         res.render('account', { account: data, balance: tokenBalance[0], events: events, offset: req.params.offset, stepSize: 50 });
       });
     });

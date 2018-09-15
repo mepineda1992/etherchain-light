@@ -5,10 +5,10 @@ extends layout
 block content
   div(class="ui width aligned padded grid")
     div(class="fourteen column")
-      h4(class="ui header") 
+      h4(class="ui header")
         i(class="blue angle double down icon")
         | Recent blocks
-      table(class="ui blue very compact table")
+      table(class="ui blue very compact table word-break")
         thead
           tr
             th Number
@@ -29,7 +29,7 @@ block content
 
   div(class="ui width aligned padded grid")
     div(class="fourteen column")
-      h4(class="ui header") 
+      h4(class="ui header")
         i(class="blue angle double down icon")
         | Recent Transactions
       if txs.length === 0
@@ -60,7 +60,7 @@ block content
 
   div(class="ui width aligned padded grid")
     div(class="fourteen column")
-      h4(class="ui header") 
+      h4(class="ui header")
         i(class="blue angle double down icon")
         | Recent ERC-20 Transactions
       table(class="ui blue very compact table")

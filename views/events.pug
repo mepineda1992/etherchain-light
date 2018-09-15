@@ -1,7 +1,7 @@
 extends layout
 
-block content 
-  div(class="ui width aligned padded grid")
+block content
+  div(class="ui width aligned padded grid word-break")
     div(class="row")
       div(class="fourteen column")
         if offset - stepSize >= 0
@@ -13,8 +13,8 @@ block content
           | Next
 
     div(class="row")
-      div(class="fourteen column")
-        h4(class="ui header") 
+      div(class="fourteen column word-break")
+        h4(class="ui header")
           i(class="blue angle double down icon")
           | Events
         table(class="ui blue very compact table")
@@ -28,7 +28,7 @@ block content
           tbody
             for event in events
               +event_row(event)
-  
+
     div(class="row")
       div(class="fourteen column")
         if offset - stepSize >= 0
