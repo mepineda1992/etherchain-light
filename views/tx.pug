@@ -6,103 +6,76 @@ block content
 
   h3 Transaction #{tx.hash}
   table.table
-    tr
+    tr.tableFlex
       td Hash:
       td
         a(href=basepath + "/tx/" + tx.hash) #{tx.hash}
-    tr
+    tr.tableFlex
       td Block hash:
       td
         a(href=basepath + "/block/" + tx.blockHash) #{tx.blockHash}
-    tr
+    tr.tableFlex
       td Block number:
       td
         a(href=basepath + "/block/" + tx.blockNumber) #{tx.blockNumber}
-    tr
+    tr.tableFlex
       td From:
       td
         a(href=basepath + "/account/" + tx.from) #{nameformatter.format(tx.from)}
-    tr
+    tr.tableFlex
       td To:
       td
         if tx.to
           a(href=basepath + "/account/" + tx.to) #{nameformatter.format(tx.to)}
         else
           | New Contract
-    tr
+    tr.tableFlex
       td Amount:
       td #{ethformatter(tx.value)}
-    tr
+    tr.tableFlex
       td Nonce:
       td #{tx.nonce}
-    tr
+    tr.tableFlex
       td Gas Limit:
       td #{tx.gas}
-    tr
+    tr.tableFlex
       td Gas Used:
       td #{tx.gasUsed}
     tr
       td Gas Price:
       td #{ethformatter(tx.gasPrice)}
-    tr
+    tr.tableFlex
       td Fee:
       td #{ethformatter(tx.gasUsed * tx.gasPrice)}
-    //-if tx.callInfo
-    //-  tr
-    //-    td Function Name:
-    //-    td #{tx.callInfo.name}
-    //-  tr
-    //-    td Parameters:
-    //-    td
-    //-      table.table
-    //-        thead
-    //-          tr
-    //-            th Name
-    //-            th Type
-    //-            th Value
-    //-        tbody
-    //-          for pa in tx.callInfo.params
-    //-            tr
-    //-              td #{pa.name}
-    //-              td #{pa.type}
-    //-              if pa.type === "bytes" && pa.value
-    //-                td
-    //-                  pre 0x#{pa.value.toString("hex")}
-    //-              else if pa.type === "uint256" && pa.value
-    //-                td.parameter-cell #{pa.value.toString(10)}
-    //-              else
-    //-                td.parameter-cell #{JSON.stringify(pa.value, null, 2)}
-    if tx.logs
-      tr
-        td Events:
-        td
-          table.table
-            for log in tx.logs
-              tr
-                td Address
-                td #{tx.to}
-              tr
-                td Topic
-                td #{log.topic}
-              tr
-                td
-                td
-                  for arg, ix in log.args
-                    div.input-group
-                      .input-group-btn
-                        select.form-control(id="event"+ix)
-                          option(value='int256') Number
-                          option(value='hex') Hex
-                          option(value='string') Text
-                          option(value='address') address
-                          option(value='bool') Boolean
-                        span.form-control.int256 #{arg['int256']}
-                        span.form-control.hide.hex #{arg['hex']}
-                        span.form-control.hide.string #{arg['string']}
-                        span.form-control.hide.address #{arg['address']}
-                        span.form-control.hide.bool #{arg['bool']}
-
-    tr
+      if tx.logs
+        tr
+          td Events:
+          td
+            table.table
+              for log in tx.logs
+                tr.tableFlex
+                  td Address
+                  td #{tx.to}
+                tr.tableFlex
+                  td Topic
+                  td #{log.topic}
+                tr.tableFlex
+                  td Elements
+                    td
+                      for arg, ix in log.args
+                        div.form-group.form-control-sm.strong
+                            select.form-control(id="event"+ix)
+                              option(value='int256').strong Number
+                              option(value='hex').strong Hex
+                              option(value='string').strong Text
+                              option(value='address').strong address
+                              option(value='bool').strong Boolean
+                            span.form-control.int256 #{arg['int256']}
+                            span.form-control.hide.hex #{arg['hex']}
+                            span.form-control.hide.string #{arg['string']}
+                            span.form-control.hide.address #{arg['address']}
+                            span.form-control.hide.bool #{arg['bool']}
+    tr.tableFlex
       td Data:
       td
         pre #{tx.input}

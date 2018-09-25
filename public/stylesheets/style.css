@@ -1,6 +1,49 @@
 body {
   padding: 50px;
+
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.form-control {
+  font-size: 12px;
+  margin-bottom: 5px;
+
+}
+
+@media (max-width: 540px) {
+  body {
+    //float: left;
+    padding: 0px;
+    //overflow-x:hidden;
+  }
+
+  h3 {
+    word-wrap: break-word;
+  }
+
+  table, tr {
+    display: inline;
+  }
+
+  table, td {
+    display: block;
+    word-wrap: break-word;
+    text-align: justify;
+  }
+
+  a {
+    word-break: break-all;
+  }
+
+  .tableFlex {
+    display: block;
+    word-wrap: break-word;
+    width: 80% !important;
+    margin-right: -10px;
+    text-align: justify;
+    margin-left: -10px;
+  }
+
 }
 
 a {
@@ -11,9 +54,6 @@ a {
   text-transform:capitalize;
 }
 
-nav-explorer {
-  position: relative;
-}
 pre {
     white-space: pre-wrap;       /* Since CSS 2.1 */
     white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */

@@ -54,7 +54,18 @@ router.get('/:offset?', function(req, res, next) {
       return next(err);
     }
 
-    res.render("accounts", { accounts: accounts, lastAccount: lastAccount });
+    var dbEvent = req.app.get('dbEvent');
+
+    if (!req.params.offset) {
+      req.params.offset = 0;
+    } else {
+      req.params.offset = parseInt(req.params.offset);
+    }
+
+    dbEvent.find({ balance: { $exists: true } }).sort({ _id: 1 }).skip(req.params.offset).limit(50).exec(function(err, accounts) {
+      res.render('accounts', {accounts: accounts, lastAccount: lastAccount, accounts: accounts, offset: req.params.offset, stepSize: 50 });
+    });
+
   });
 });
 
